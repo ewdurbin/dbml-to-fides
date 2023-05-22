@@ -1,6 +1,7 @@
 import tempfile
 
 import click
+import yaml
 
 from pydbml import PyDBML
 from fideslang.manifests import ingest_manifests, write_manifest
@@ -27,10 +28,11 @@ def transform_and_merge(dbml, base_dataset, output_file):
 
     if output_file is None:
         with tempfile.NamedTemporaryFile() as f:
-            write_manifest(f.name, _fides_dataset_dict, "dataset")
+            yaml.dump(_fides_dataset_dict, f, sort_keys=False, indent=2)
             click.echo(f.read())
     else:
-        write_manifest(output_file, _fides_dataset_dict, "dataset")
+        with open(output_file, "w") as f:
+            yaml.dump(_fides_dataset_dict, f, sort_keys=False, indent=2)
 
 
 if __name__ == "__main__":

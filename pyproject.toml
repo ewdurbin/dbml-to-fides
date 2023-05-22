@@ -33,6 +33,7 @@ dependencies = [ # Optional
   "deepmerge",
   "fideslang",
   "pydbml",
+  "pyaml",
 ]
 
 [project.urls]  # Optional

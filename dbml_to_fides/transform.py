@@ -44,7 +44,7 @@ def relistify(manifest):
             collections.append(collection)
         dataset["collections"] = collections
         relistified.append(dataset)
-    return relistified
+    return {"dataset": relistified}
 
 
 def merge_fides_dataset_dicts(existing, new):
