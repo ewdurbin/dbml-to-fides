@@ -1,0 +1,6 @@
+/venv
+/.venv
+/.tox
+/*.egg-info
+
+/dist

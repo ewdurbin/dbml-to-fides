@@ -1,0 +1,47 @@
+[project]
+name = "dbml-to-fides"
+version = "1.0.0a1"
+description = "Interoperatbility for DBML and Fides dataset manifests"
+
+readme = "README.md"
+requires-python = ">=3.8, <4"
+license = {file = "LICENSE.txt"}
+
+keywords = ["fides", "dbml"]
+authors = [
+  {name = "Ee Durbin", email = "ee.opensource@pyfound.org" }
+]
+
+# Classifiers help users find your project by categorizing it.
+#
+# For a list of valid classifiers, see https://pypi.org/classifiers/
+classifiers = [  # Optional
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Build Tools",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3 :: Only",
+]
+
+dependencies = [ # Optional
+  "click",
+  "deepmerge",
+  "fideslang",
+  "pydbml",
+]
+
+[project.urls]  # Optional
+"Homepage" = "https://github.com/ewdurbin/dbml-to-fides"
+"Source" = "https://github.com/ewdurbin/dbml-to-fides"
+
+[project.scripts]  # Optional
+dbml-to-fides = "dbml_to_fides.cli:transform_and_merge"
+
+[build-system]
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
