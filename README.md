@@ -8,3 +8,195 @@ Fides dataset manifest.
 
 Combined, this can be used in automation to ensure that datasets are kept
 up-to-date with the latest schema changes in continuous integration.
+
+## Usage
+
+Given a sample DBML in `sample.dbml`:
+
+```dbml
+Table users {
+  id integer [primary key]
+  username varchar
+  role varchar
+  created_at timestamp
+}
+
+Table posts {
+  id integer [primary key]
+  title varchar
+  body text [note: 'Content of the post']
+  user_id integer
+  status post_status
+  created_at timestamp
+}
+
+Enum post_status {
+  draft
+  published
+  private [note: 'visible via URL only']
+}
+
+Ref: posts.user_id > users.id // many-to-one
+```
+
+`dbml-to-fides` will output what it can infer from the DBML file as a Fides
+dataset:
+
+```sh
+$ dbml-to-fides sample.dbml
+dataset:
+- dataset:
+  - name: public
+    collections:
+    - name: users
+      fields:
+      - name: id
+        fides_meta:
+          primary_key: true
+      - name: username
+      - name: role
+      - name: created_at
+    - name: posts
+      fields:
+      - name: id
+        fides_meta:
+          primary_key: true
+      - name: title
+      - name: body
+      - name: user_id
+        fides_meta:
+          references:
+          - dataset: public
+            field: users.id
+            direction: to
+      - name: status
+      - name: created_at
+
+```
+
+If you have an existing Fides dataset in `.fides/sample_dataset.yml`:
+
+```yaml
+dataset:
+- fides_key: sample_dataset
+  organization_fides_key: default_organization
+  name: public
+  description: Sample dataset for my system
+  meta: null
+  data_categories: []
+  data_qualifier: aggregated.anonymized.unlinked_pseudonymized.pseudonymized.identified
+  retention: 30 days after account deletion
+  collections:
+  - name: users
+    description: User information
+    fields:
+    - name: id
+      fides_meta:
+        primary_key: true
+      description: User's unique ID
+      data_categories:
+      - user.unique_id
+      data_qualifier: aggregated.anonymized.unlinked_pseudonymized.pseudonymized.identified
+    - name: username
+      description: User's username
+      data_categories:
+      - user.name
+      data_qualifier: aggregated.anonymized.unlinked_pseudonymized.pseudonymized.identified
+      retention: Account termination
+    - name: role
+      description: User's system level role/privilege
+      data_categories:
+      - system.operations
+      data_qualifier: aggregated.anonymized.unlinked_pseudonymized.pseudonymized.identified
+    - name: created_at
+      description: User's creation timestamp
+      data_categories:
+      - system.operations
+      data_qualifier: aggregated.anonymized.unlinked_pseudonymized.pseudonymized.identified
+  - name: posts
+    description: Post information
+    fields:
+    - name: id
+      fides_meta:
+        primary_key: true
+      description: Post's unique ID
+      data_categories:
+      - system.operations
+      data_qualifier: aggregated.anonymized.unlinked_pseudonymized.pseudonymized.identified
+    - name: title
+      description: Post's title
+      data_categories:
+      - system.operations
+      data_qualifier: aggregated.anonymized.unlinked_pseudonymized.pseudonymized.identified
+    - name: body
+      description: Post's body
+      data_categories:
+      - system.operations
+      data_qualifier: aggregated.anonymized.unlinked_pseudonymized.pseudonymized.identified
+    - name: user_id
+      fides_meta:
+        references:
+        - dataset: public
+          field: users.id
+          direction: to
+      description: Post creator's unique User ID
+      data_categories:
+      - user.unique_id
+      data_qualifier: aggregated.anonymized.unlinked_pseudonymized.pseudonymized.identified
+    - name: status
+      description: User's creation timestamp
+      data_categories:
+      - system.operations
+      data_qualifier: aggregated.anonymized.unlinked_pseudonymized.pseudonymized.identified
+    - name: created_at
+      description: Post's creation timestamp
+      data_categories:
+      - system.operations
+      data_qualifier: aggregated.anonymized.unlinked_pseudonymized.pseudonymized.identified
+
+```
+
+`dbml-to-fides` can be used with the
+`--base-dataset` option to merge the results together.
+But, in this case there are no differences:
+
+```sh
+$ diff -u .fides/sample_dataset.yml <(dbml-to-fides sample.dbml --base-dataset .fides/sample_dataset.yml)
+$
+```
+
+If we introduce a change to the DBML:
+
+```diff
+@@ -3,6 +3,7 @@ Table users {
+   username varchar
+   role varchar
+   created_at timestamp
++  social_security_number varchar
+ }
+ 
+ Table posts {
+```
+
+Then running our diff again will add the field to our Fides dataset:
+
+```shell
+$ diff -u .fides/sample_dataset.yml <(dbml-to-fides sample.dbml --base-dataset .fides/sample_dataset.yml)
+--- .fides/sample_dataset.yml	2023-05-22 11:30:41
++++ /dev/fd/63	2023-05-22 11:35:13
+@@ -34,6 +34,7 @@
+       data_categories:
+       - system.operations
+       data_qualifier: aggregated.anonymized.unlinked_pseudonymized.pseudonymized.identified
++    - name: social_security_number
+   - name: posts
+     description: Post information
+     fields:
+```
+
+If we wanted to write the output to a file,
+we would add the `--output-file` flag:
+
+```shell
+$ dbml-to-fides sample.dbml --base-dataset .fides/sample_dataset.yml
+```

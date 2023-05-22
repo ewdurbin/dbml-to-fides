@@ -16,20 +16,34 @@ def unlistify(manifest):
                 field["name"]: field
                 for field in collections[collection["name"]]["fields"]
             }
+            for field in collections[collection["name"]]["fields"].values():
+                references = {}
+                for reference in field.get("fides_meta", {}).get("references", []):
+                    references[
+                        f"{reference['dataset']}:{reference['field']}"
+                    ] = reference
+                if references:
+                    field["fides_meta"]["references"] = references
         dataset["collections"] = collections
         unlistified["dataset"][dataset["name"]] = dataset
     return unlistified
 
 
 def relistify(manifest):
-    relistified = {"dataset": []}
+    relistified = []
     for dataset in deepcopy(manifest["dataset"]).values():
         collections = []
         for collection in dataset["collections"].values():
             collection["fields"] = list(collection["fields"].values())
+            for field in collection["fields"]:
+                references = list(
+                    field.get("fides_meta", {}).get("references", {}).values()
+                )
+                if references:
+                    field["fides_meta"]["references"] = references
             collections.append(collection)
         dataset["collections"] = collections
-        relistified["dataset"].append(dataset)
+        relistified.append(dataset)
     return relistified
 
 
@@ -55,11 +69,11 @@ def dbml_to_fides_dataset_dict(dbml: Database) -> Dict:
             field = {}
             field["name"] = column.name
 
-            fidesops_meta = {}
+            fides_meta = {}
             if column.pk:
-                fidesops_meta["primary_key"] = True
+                fides_meta["primary_key"] = True
 
-            fidesops_meta_references = []
+            fides_meta_references = []
             for reference in column.get_refs():
                 if reference.table1 == table:
                     direction = "to"
@@ -74,13 +88,13 @@ def dbml_to_fides_dataset_dict(dbml: Database) -> Dict:
                     "field": ref_field,
                     "direction": direction,
                 }
-                fidesops_meta_references.append(reference)
+                fides_meta_references.append(reference)
 
-            if fidesops_meta_references:
-                fidesops_meta["references"] = fidesops_meta_references
+            if fides_meta_references:
+                fides_meta["references"] = fides_meta_references
 
-            if fidesops_meta:
-                field["fidesops_meta"] = fidesops_meta
+            if fides_meta:
+                field["fides_meta"] = fides_meta
 
             fields.append(field)
 
