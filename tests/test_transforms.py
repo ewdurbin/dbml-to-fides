@@ -4,8 +4,14 @@ from pprint import pprint as pp
 import pytest
 
 from fideslang.manifests import ingest_manifests
+from pydbml import PyDBML
 
-from dbml_to_fides.transform import unlistify, relistify
+from dbml_to_fides.transform import (
+    unlistify,
+    relistify,
+    dbml_to_fides_dataset_dict,
+    merge_fides_dataset_dicts,
+)
 
 
 @pytest.mark.parametrize(
@@ -20,3 +26,18 @@ from dbml_to_fides.transform import unlistify, relistify
 def test_roundtrip_listify(dataset_file):
     manifest = ingest_manifests(dataset_file)
     assert manifest == relistify(unlistify(manifest))
+
+
+@pytest.mark.parametrize(
+    ("dataset_file", "dbml_file"),
+    [
+        ("tests/data/sample_dataset.yml", "tests/data/sample.dbml"),
+    ],
+)
+def test_merge(dataset_file, dbml_file):
+    manifest = ingest_manifests(dataset_file)
+    dbml = PyDBML(open(dbml_file, "r").read())
+
+    assert manifest == merge_fides_dataset_dicts(
+        manifest, dbml_to_fides_dataset_dict(dbml)
+    )
