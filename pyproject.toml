@@ -1,6 +1,6 @@
 [project]
 name = "dbml-to-fides"
-version = "1.0.0a3"
+version = "1.0.0a4"
 description = "Interoperatbility for DBML and Fides dataset manifests"
 
 readme = "README.md"
