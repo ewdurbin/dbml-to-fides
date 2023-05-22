@@ -27,9 +27,7 @@ def transform_and_merge(dbml, base_dataset, output_file):
         )
 
     if output_file is None:
-        with tempfile.NamedTemporaryFile() as f:
-            yaml.dump(_fides_dataset_dict, f, sort_keys=False, indent=2)
-            click.echo(f.read())
+        click.echo(yaml.dump(_fides_dataset_dict,sort_keys=False, indent=2), nl=False)
     else:
         with open(output_file, "w") as f:
             yaml.dump(_fides_dataset_dict, f, sort_keys=False, indent=2)

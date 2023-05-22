@@ -45,32 +45,31 @@ dataset:
 ```sh
 $ dbml-to-fides sample.dbml
 dataset:
-- dataset:
-  - name: public
-    collections:
-    - name: users
-      fields:
-      - name: id
-        fides_meta:
-          primary_key: true
-      - name: username
-      - name: role
-      - name: created_at
-    - name: posts
-      fields:
-      - name: id
-        fides_meta:
-          primary_key: true
-      - name: title
-      - name: body
-      - name: user_id
-        fides_meta:
-          references:
-          - dataset: public
-            field: users.id
-            direction: to
-      - name: status
-      - name: created_at
+- name: public
+  collections:
+  - name: users
+    fields:
+    - name: id
+      fides_meta:
+        primary_key: true
+    - name: username
+    - name: role
+    - name: created_at
+  - name: posts
+    fields:
+    - name: id
+      fides_meta:
+        primary_key: true
+    - name: title
+    - name: body
+    - name: user_id
+      fides_meta:
+        references:
+        - dataset: public
+          field: users.id
+          direction: to
+    - name: status
+    - name: created_at
 
 ```
 
@@ -182,8 +181,8 @@ Then running our diff again will add the field to our Fides dataset:
 
 ```shell
 $ diff -u .fides/sample_dataset.yml <(dbml-to-fides sample.dbml --base-dataset .fides/sample_dataset.yml)
---- .fides/sample_dataset.yml	2023-05-22 11:30:41
-+++ /dev/fd/63	2023-05-22 11:35:13
+--- .fides/sample_dataset.yml	2023-05-22 15:39:24
++++ /dev/fd/63	2023-05-22 15:40:07
 @@ -34,6 +34,7 @@
        data_categories:
        - system.operations
@@ -198,5 +197,18 @@ If we wanted to write the output to a file,
 we would add the `--output-file` flag:
 
 ```shell
-$ dbml-to-fides sample.dbml --base-dataset .fides/sample_dataset.yml
+$ dbml-to-fides sample.dbml --base-dataset .fides/sample_dataset.yml --output-file .fides/sample_dataset.yml
+$ git diff
+diff --git a/.fides/sample_dataset.yml b/.fides/sample_dataset.yml
+index 594cee4..edc3141 100644
+--- a/.fides/sample_dataset.yml
++++ b/.fides/sample_dataset.yml
+@@ -34,6 +34,7 @@ dataset:
+       data_categories:
+       - system.operations
+       data_qualifier: aggregated.anonymized.unlinked_pseudonymized.pseudonymized.identified
++    - name: social_security_number
+   - name: posts
+     description: Post information
+     fields:
 ```
