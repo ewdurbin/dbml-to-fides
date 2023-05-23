@@ -32,6 +32,7 @@ def test_roundtrip_listify(dataset_file):
     ("dataset_file", "dbml_file"),
     [
         ("tests/data/sample_dataset.yml", "tests/data/sample.dbml"),
+        ("tests/data/schema_def_dataset_min.yml", "tests/data/schema_def.dbml"),
     ],
 )
 def test_merge(dataset_file, dbml_file):

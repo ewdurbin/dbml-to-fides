@@ -1,0 +1,64 @@
+dataset:
+- name: ecommerce
+  collections:
+  - name: users
+    fields:
+    - name: id
+      fides_meta:
+        primary_key: true
+    - name: name
+    - name: ejs
+    - name: ejs2
+    - name: eg
+    - name: eg2
+- name: public
+  collections:
+  - name: users
+    fields:
+    - name: id
+      fides_meta:
+        primary_key: true
+        references:
+        - dataset: ecommerce
+          field: users.id
+          direction: to
+    - name: name
+      fides_meta:
+        references:
+        - dataset: ecommerce
+          field: users.id
+          direction: to
+    - name: pjs
+    - name: pjs2
+    - name: pg
+    - name: pg2
+  - name: products
+    fields:
+    - name: id
+      fides_meta:
+        primary_key: true
+    - name: name
+- name: schemaA
+  collections:
+  - name: products
+    fields:
+    - name: id
+      fides_meta:
+        primary_key: true
+    - name: name
+      fides_meta:
+        references:
+        - dataset: ecommerce
+          field: users.id
+          direction: to
+  - name: locations
+    fields:
+    - name: id
+      fides_meta:
+        primary_key: true
+    - name: name
+      fides_meta:
+        references:
+        - dataset: public
+          field: users.id
+          direction: to
