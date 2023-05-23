@@ -5,6 +5,32 @@ from typing import Dict
 from deepmerge import always_merger
 from pydbml.database import Database
 
+dataset_keys = {
+    "fides_key": None,
+    "description": None,
+    "organization_fides_key": None,
+    "meta": {},
+    "third_country_transfers": [],
+    "joint_controller": [],
+    "retention": None,
+    "data_categories": [],
+    "data_qualifiers": [],
+}
+
+collection_keys = {
+    "description": None,
+    "data_categories": [],
+    "data_qualifiers": [],
+    "retention": None,
+}
+
+field_keys = {
+    "description": None,
+    "data_categories": [],
+    "data_qualifier": None,
+    "retention": None,
+}
+
 
 def unlistify(manifest):
     unlistified = {"dataset": {}}
@@ -56,17 +82,19 @@ def merge_fides_dataset_dicts(existing, new):
     return relistify(updated)
 
 
-def dbml_to_fides_dataset_dict(dbml: Database) -> Dict:
+def dbml_to_fides_dataset_dict(dbml: Database, include_fides_keys: bool = False) -> Dict:
     collections = defaultdict(list)
     for table in dbml.tables:
-        collection = {}
+        collection = {**(deepcopy(collection_keys) if include_fides_keys else {})}
+
         collection["name"] = table.name
         if table.note:
             collection["description"] = str(table.note)
 
         fields = []
         for column in table.columns:
-            field = {}
+            field = {**(deepcopy(field_keys) if include_fides_keys else {})}
+
             field["name"] = column.name
 
             fides_meta = {}
@@ -105,7 +133,11 @@ def dbml_to_fides_dataset_dict(dbml: Database) -> Dict:
 
     return {
         "dataset": [
-            {"name": schema, "collections": _collections}
+            {
+                "name": schema,
+                "collections": _collections,
+                **(deepcopy(dataset_keys) if include_fides_keys else {}),
+            }
             for schema, _collections in collections.items()
         ]
     }
