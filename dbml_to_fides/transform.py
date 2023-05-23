@@ -85,7 +85,9 @@ def merge_fides_dataset_dicts(existing, new):
     return relistify(updated)
 
 
-def dbml_to_fides_dataset_dict(dbml: Database, include_fides_keys: bool = False) -> Dict:
+def dbml_to_fides_dataset_dict(
+    dbml: Database, include_fides_keys: bool = False
+) -> Dict:
     collections = defaultdict(list)
     for table in dbml.tables:
         collection = {**(deepcopy(collection_keys) if include_fides_keys else {})}
