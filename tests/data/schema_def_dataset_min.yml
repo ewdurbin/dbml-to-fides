@@ -2,6 +2,7 @@ dataset:
 - name: ecommerce
   collections:
   - name: users
+    description: ecommerce users
     fields:
     - name: id
       fides_meta:
@@ -14,6 +15,7 @@ dataset:
 - name: public
   collections:
   - name: users
+    description: Users
     fields:
     - name: id
       fides_meta:

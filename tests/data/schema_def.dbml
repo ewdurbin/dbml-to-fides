@@ -5,6 +5,7 @@ Table "ecommerce"."users" as EU {
   ejs2 public.job_status
   eg schemaB.gender
   eg2 gender
+  Note: 'ecommerce users'
 }
 
 Table public.users {
@@ -14,6 +15,7 @@ Table public.users {
   pjs2 public.job_status
   pg schemaB.gender
   pg2 gender
+  note: "Users"
 }
 
 Table products {
