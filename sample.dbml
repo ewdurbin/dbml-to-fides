@@ -3,6 +3,7 @@ Table users {
   username varchar
   role varchar
   created_at timestamp
+  note: "Users"
 }
 
 Table posts {
@@ -12,6 +13,7 @@ Table posts {
   user_id integer
   status post_status
   created_at timestamp
+  Note: 'All the content you crave'
 }
 
 Enum post_status {

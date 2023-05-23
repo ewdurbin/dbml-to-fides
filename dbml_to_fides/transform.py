@@ -96,6 +96,8 @@ def dbml_to_fides_dataset_dict(dbml: Database, include_fides_keys: bool = False)
             field = {**(deepcopy(field_keys) if include_fides_keys else {})}
 
             field["name"] = column.name
+            if column.note:
+                field["description"] = str(column.note)
 
             fides_meta = {}
             if column.pk:
