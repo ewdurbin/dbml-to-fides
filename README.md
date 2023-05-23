@@ -11,6 +11,8 @@ up-to-date with the latest schema changes in continuous integration.
 
 ## Usage
 
+### Basic
+
 Given a sample DBML in `sample.dbml`:
 
 ```dbml
@@ -48,6 +50,7 @@ dataset:
 - name: public
   collections:
   - name: users
+    description: Users
     fields:
     - name: id
       fides_meta:
@@ -56,12 +59,14 @@ dataset:
     - name: role
     - name: created_at
   - name: posts
+    description: All the content you crave
     fields:
     - name: id
       fides_meta:
         primary_key: true
     - name: title
     - name: body
+      description: Content of the post
     - name: user_id
       fides_meta:
         references:
@@ -72,6 +77,8 @@ dataset:
     - name: created_at
 
 ```
+
+### Merging with existing Fides dataset
 
 If you have an existing Fides dataset in `.fides/sample_dataset.yml`:
 
@@ -193,6 +200,8 @@ $ diff -u .fides/sample_dataset.yml <(dbml-to-fides sample.dbml --base-dataset .
      fields:
 ```
 
+### File output
+
 If we wanted to write the output to a file,
 we would add the `--output-file` flag:
 
@@ -211,4 +220,104 @@ index 594cee4..edc3141 100644
    - name: posts
      description: Post information
      fields:
+```
+
+### Initial generation
+
+If you do not have an existing Fides dataset, the `--include-fides-keys` flag will
+create a more "fleshed out" version of a
+[Fides dataset](https://ethyca.github.io/fideslang/resources/dataset/)
+including all keys. See the [docs](https://ethyca.github.io/fideslang/resources/dataset/)
+for what each field can/should be populated with.
+
+```shell
+$ dbml-to-fides sample.dbml --include-fides-keys
+dataset:
+- name: public
+  collections:
+  - description: Users
+    data_categories: []
+    data_qualifiers: []
+    retention: null
+    name: users
+    fields:
+    - description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+      name: id
+      fides_meta:
+        primary_key: true
+    - description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+      name: username
+    - description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+      name: role
+    - description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+      name: created_at
+    - description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+      name: social
+  - description: All the content you crave
+    data_categories: []
+    data_qualifiers: []
+    retention: null
+    name: posts
+    fields:
+    - description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+      name: id
+      fides_meta:
+        primary_key: true
+    - description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+      name: title
+    - description: Content of the post
+      data_categories: []
+      data_qualifier: null
+      retention: null
+      name: body
+    - description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+      name: user_id
+      fides_meta:
+        references:
+        - dataset: public
+          field: users.id
+          direction: to
+    - description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+      name: status
+    - description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+      name: created_at
+  fides_key: null
+  description: null
+  organization_fides_key: null
+  meta: {}
+  third_country_transfers: []
+  joint_controller: []
+  retention: null
+  data_categories: []
+  data_qualifiers: []
 ```
