@@ -75,7 +75,6 @@ dataset:
           direction: to
     - name: status
     - name: created_at
-
 ```
 
 ### Merging with existing Fides dataset
@@ -233,85 +232,8 @@ for what each field can/should be populated with.
 ```shell
 $ dbml-to-fides sample.dbml --include-fides-keys
 dataset:
-- name: public
-  collections:
-  - description: Users
-    data_categories: []
-    data_qualifiers: []
-    retention: null
-    name: users
-    fields:
-    - description: null
-      data_categories: []
-      data_qualifier: null
-      retention: null
-      name: id
-      fides_meta:
-        primary_key: true
-    - description: null
-      data_categories: []
-      data_qualifier: null
-      retention: null
-      name: username
-    - description: null
-      data_categories: []
-      data_qualifier: null
-      retention: null
-      name: role
-    - description: null
-      data_categories: []
-      data_qualifier: null
-      retention: null
-      name: created_at
-    - description: null
-      data_categories: []
-      data_qualifier: null
-      retention: null
-      name: social
-  - description: All the content you crave
-    data_categories: []
-    data_qualifiers: []
-    retention: null
-    name: posts
-    fields:
-    - description: null
-      data_categories: []
-      data_qualifier: null
-      retention: null
-      name: id
-      fides_meta:
-        primary_key: true
-    - description: null
-      data_categories: []
-      data_qualifier: null
-      retention: null
-      name: title
-    - description: Content of the post
-      data_categories: []
-      data_qualifier: null
-      retention: null
-      name: body
-    - description: null
-      data_categories: []
-      data_qualifier: null
-      retention: null
-      name: user_id
-      fides_meta:
-        references:
-        - dataset: public
-          field: users.id
-          direction: to
-    - description: null
-      data_categories: []
-      data_qualifier: null
-      retention: null
-      name: status
-    - description: null
-      data_categories: []
-      data_qualifier: null
-      retention: null
-      name: created_at
-  fides_key: null
+- fides_key: null
+  name: public
   description: null
   organization_fides_key: null
   meta: {}
@@ -320,4 +242,81 @@ dataset:
   retention: null
   data_categories: []
   data_qualifiers: []
+  collections:
+  - name: users
+    description: Users
+    data_categories: []
+    data_qualifiers: []
+    retention: null
+    fields:
+    - name: id
+      description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+      fides_meta:
+        primary_key: true
+    - name: username
+      description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+    - name: role
+      description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+    - name: created_at
+      description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+    - name: social
+      description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+  - name: posts
+    description: All the content you crave
+    data_categories: []
+    data_qualifiers: []
+    retention: null
+    fields:
+    - name: id
+      description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+      fides_meta:
+        primary_key: true
+    - name: title
+      description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+    - name: body
+      description: Content of the post
+      data_categories: []
+      data_qualifier: null
+      retention: null
+    - name: user_id
+      description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+      fides_meta:
+        references:
+        - dataset: public
+          field: users.id
+          direction: to
+    - name: status
+      description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
+    - name: created_at
+      description: null
+      data_categories: []
+      data_qualifier: null
+      retention: null
 ```

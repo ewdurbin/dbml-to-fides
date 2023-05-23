@@ -7,6 +7,7 @@ from pydbml.database import Database
 
 dataset_keys = {
     "fides_key": None,
+    "name": None,
     "description": None,
     "organization_fides_key": None,
     "meta": {},
@@ -18,6 +19,7 @@ dataset_keys = {
 }
 
 collection_keys = {
+    "name": None,
     "description": None,
     "data_categories": [],
     "data_qualifiers": [],
@@ -25,6 +27,7 @@ collection_keys = {
 }
 
 field_keys = {
+    "name": None,
     "description": None,
     "data_categories": [],
     "data_qualifier": None,
@@ -136,9 +139,9 @@ def dbml_to_fides_dataset_dict(dbml: Database, include_fides_keys: bool = False)
     return {
         "dataset": [
             {
+                **(deepcopy(dataset_keys) if include_fides_keys else {}),
                 "name": schema,
                 "collections": _collections,
-                **(deepcopy(dataset_keys) if include_fides_keys else {}),
             }
             for schema, _collections in collections.items()
         ]
