@@ -1,6 +1,6 @@
 [project]
 name = "dbml-to-fides"
-version = "1.0.0a6"
+dynamic = ["version"]
 description = "Interoperatbility for DBML and Fides dataset manifests"
 
 readme = "README.md"
@@ -44,5 +44,7 @@ dependencies = [ # Optional
 dbml-to-fides = "dbml_to_fides.cli:transform_and_merge"
 
 [build-system]
-requires = ["setuptools>=43.0.0", "wheel"]
+requires = ["setuptools>=43.0.0", "wheel", "setuptools_scm[toml]>=6.2"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools_scm]
